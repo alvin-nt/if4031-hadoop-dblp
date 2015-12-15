@@ -52,6 +52,7 @@ public class DBLPMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
             parser = factory.newSAXParser();
 
             DBLPEntryHandler handler = new DBLPEntryHandler(entries);
+            System.out.println(value.toString());
 
             parser.parse(new InputSource(new StringReader(value.toString())), handler);
 

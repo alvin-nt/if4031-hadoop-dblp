@@ -71,11 +71,11 @@ public class DBLPEntryHandler extends DefaultHandler2 {
     @Override
     public void endElement(String namespaceURI, String localName, String rawName) throws SAXException {
         if (!StringUtils.isBlank(rawName)) {
-            if (rawName.equals(currentEntry.getType())) {
+            if (rawName.equals("dblp")) {
+                // just ignore
+            } else if (rawName.equals(currentEntry.getType())) {
                 entryList.add(currentEntry);
                 currentEntry = null;
-            } else if (rawName.equals("dblp")) {
-                // just ignore
             } else {
                 if (!StringUtils.isBlank(currentTag)) {
                     if (currentEntry == null) {
@@ -112,7 +112,10 @@ public class DBLPEntryHandler extends DefaultHandler2 {
 
     @Override
     public InputSource getExternalSubset (String name, String baseURI) throws SAXException, IOException {
-        InputStream is = ClassLoader.class.getResourceAsStream("dblp.dtd");
+        InputStream is = ClassLoader.getSystemResourceAsStream("dblp.dtd");
+        if (is == null) {
+            throw new IOException("Cannot load DTD!");
+        }
         return new InputSource(is);
     }
 
@@ -120,13 +123,19 @@ public class DBLPEntryHandler extends DefaultHandler2 {
     public InputSource resolveEntity (String name, String publicId, String baseURI, String systemId)
             throws SAXException, IOException
     {
-        InputStream is = ClassLoader.class.getResourceAsStream("dblp.dtd");
+        InputStream is = ClassLoader.getSystemResourceAsStream("dblp.dtd");
+        if (is == null) {
+            throw new IOException("Cannot load DTD!");
+        }
         return new InputSource(is);
     }
 
     @Override
     public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
-        InputStream is = ClassLoader.class.getResourceAsStream("dblp.dtd");
+        InputStream is = ClassLoader.getSystemResourceAsStream("dblp.dtd");
+        if (is == null) {
+            throw new IOException("Cannot load DTD!");
+        }
         return new InputSource(is);
     }
 }
